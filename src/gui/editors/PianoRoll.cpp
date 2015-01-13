@@ -3055,6 +3055,7 @@ void PianoRoll::paintEvent(QPaintEvent * pe )
 		case ModeErase: cursor = s_toolErase; break;
 		case ModeSelect: cursor = s_toolSelect; break;
 		case ModeEditDetuning: cursor = s_toolOpen; break;
+		case ModeSlice: qDebug("Unhandled case: ModeSlice");
 	}
 	if( cursor != NULL )
 	{
@@ -3946,12 +3947,12 @@ PianoRollWindow::PianoRollWindow() :
 	m_stopAction->setWhatsThis(
 		tr( "Click here to stop playback of current pattern." ) );
 
-	// init edit-buttons at the top
 	ActionGroup* editModeGroup = new ActionGroup(this);
 	QAction* drawAction = editModeGroup->addAction(embed::getIconPixmap("edit_draw"), tr("Draw mode (Shift+D)"));
 	QAction* eraseAction = editModeGroup->addAction(embed::getIconPixmap("edit_erase"), tr("Erase mode (Shift+E)"));
 	QAction* selectAction = editModeGroup->addAction(embed::getIconPixmap("edit_select"), tr("Select mode (Shift+S)"));
 	QAction* detuneAction = editModeGroup->addAction(embed::getIconPixmap("automation"), tr("Detune mode (Shift+T)"));
+	QAction* sliceAction = editModeGroup->addAction(embed::getIconPixmap("edit_cut"), tr("Slice Mode (Shift+L)"));
 
 	drawAction->setChecked( true );
 
@@ -3959,6 +3960,7 @@ PianoRollWindow::PianoRollWindow() :
 	eraseAction->setShortcut(Qt::SHIFT | Qt::Key_E);
 	selectAction->setShortcut(Qt::SHIFT | Qt::Key_S);
 	detuneAction->setShortcut(Qt::SHIFT | Qt::Key_T);
+	sliceAction->setShortcut(Qt::SHIFT | Qt::Key_L);
 
 	drawAction->setWhatsThis(
 		tr( "Click here and draw mode will be activated. In this "
@@ -3982,6 +3984,8 @@ PianoRollWindow::PianoRollWindow() :
 			"automation detuning. You can utilize this to slide "
 			"notes from one to another. You can also press "
 			"'Shift+T' on your keyboard to activate this mode." ) );
+	sliceAction->setWhatsThis(
+		tr( "Click here and slice mode will be activated" ) );
 
 	connect(editModeGroup, SIGNAL(triggered(int)), m_editor, SLOT(setEditMode(int)));
 
@@ -4062,6 +4066,7 @@ PianoRollWindow::PianoRollWindow() :
 	m_toolBar->addAction( eraseAction );
 	m_toolBar->addAction( selectAction );
 	m_toolBar->addAction( detuneAction );
+	m_toolBar->addAction( sliceAction );
 
 	m_toolBar->addSeparator();
 	m_toolBar->addAction( cutAction );

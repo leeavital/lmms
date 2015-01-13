@@ -64,6 +64,7 @@ public:
 		ModeErase,
 		ModeSelect,
 		ModeEditDetuning,
+		ModeSlice
 	};
 
 	/*! \brief Resets settings to default when e.g. creating a new project */
