@@ -1516,6 +1516,22 @@ void PianoRoll::mousePressEvent(QMouseEvent * me )
 
 				Engine::getSong()->setModified();
 			}
+			else if( me->button() == Qt::LeftButton &&
+							m_editMode == ModeSlice )
+			{
+				if( it != notes.begin() - 1 )
+				{
+					// if we found a note
+					Note *left_note = *it;
+					const MidiTime &length = left_note->length() / 2;
+					const MidiTime &pos = left_note->pos() + length;
+					Note right_note(length, pos, key_num, 
+							left_note->getVolume(), left_note->getPanning() );
+					
+					left_note->setLength(length);
+					m_pattern->addNote(right_note);
+				}
+			}
 			else if( ( me->buttons() == Qt::RightButton &&
 							m_editMode == ModeDraw ) ||
 					m_editMode == ModeErase )
@@ -3055,7 +3071,7 @@ void PianoRoll::paintEvent(QPaintEvent * pe )
 		case ModeErase: cursor = s_toolErase; break;
 		case ModeSelect: cursor = s_toolSelect; break;
 		case ModeEditDetuning: cursor = s_toolOpen; break;
-		case ModeSlice: qDebug("Unhandled case: ModeSlice");
+		case ModeSlice: break; // qDebug("Unhandled case: ModeSlice");
 	}
 	if( cursor != NULL )
 	{
